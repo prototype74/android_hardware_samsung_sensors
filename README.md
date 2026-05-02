@@ -22,7 +22,7 @@ All findings were cross-referenced with the kernel driver source (J510FNXXS3BTI6
 | Sensor | Chip | Input Device | Event Type |
 |--------|------|-------------|------------|
 | Accelerometer | K2HH (STM) | `accelerometer_sensor` | EV_REL (X/Y/Z) |
-| Proximity | CM36672P | `proximity_sensor` | EV_ABS (ABS_DISTANCE) |
+| Proximity | CM36672P, GP2A, STK3013, CM36686 | `proximity_sensor` | EV_ABS (ABS_DISTANCE) |
 
 ## Architecture
 

@@ -153,8 +153,66 @@ int ProximitySensor::readEvents(sensors_event_t *data, int count)
     return numEvents;
 }
 
+// Static sensor info structs for supported chips
 static const sensor_t sSensorProxCM36672P = {
     .name = "CM36672P Proximity Sensor",
+    .vendor = "Capella Microsystems, Inc.",
+    .version = 1,
+    .handle = HANDLE_PROXIMITY,
+    .type = SENSOR_TYPE_PROXIMITY,
+    .maxRange = PROX_MAX_DISTANCE,
+    .resolution = PROX_SCALE,
+    .power = 0.75f,
+    .minDelay = 0,
+    .fifoReservedEventCount = 0,
+    .fifoMaxEventCount = 0,
+    .stringType = SENSOR_STRING_TYPE_PROXIMITY,
+    .requiredPermission = NULL,
+    .maxDelay = 0,
+    .flags = SENSOR_FLAG_ON_CHANGE_MODE | SENSOR_FLAG_WAKE_UP,
+    .reserved = {},
+};
+
+static const sensor_t sSensorProxGP2A = {
+    .name = "GP2A Proximity Sensor",
+    .vendor = "Sharp",
+    .version = 1,
+    .handle = HANDLE_PROXIMITY,
+    .type = SENSOR_TYPE_PROXIMITY,
+    .maxRange = PROX_MAX_DISTANCE,
+    .resolution = PROX_SCALE,
+    .power = 0.75f,
+    .minDelay = 0,
+    .fifoReservedEventCount = 0,
+    .fifoMaxEventCount = 0,
+    .stringType = SENSOR_STRING_TYPE_PROXIMITY,
+    .requiredPermission = NULL,
+    .maxDelay = 0,
+    .flags = SENSOR_FLAG_ON_CHANGE_MODE | SENSOR_FLAG_WAKE_UP,
+    .reserved = {},
+};
+
+static const sensor_t sSensorProxSTK3013 = {
+    .name = "STK3013 Proximity Sensor",
+    .vendor = "Sensortek",
+    .version = 1,
+    .handle = HANDLE_PROXIMITY,
+    .type = SENSOR_TYPE_PROXIMITY,
+    .maxRange = PROX_MAX_DISTANCE,
+    .resolution = PROX_SCALE,
+    .power = 0.75f,
+    .minDelay = 0,
+    .fifoReservedEventCount = 0,
+    .fifoMaxEventCount = 0,
+    .stringType = SENSOR_STRING_TYPE_PROXIMITY,
+    .requiredPermission = NULL,
+    .maxDelay = 0,
+    .flags = SENSOR_FLAG_ON_CHANGE_MODE | SENSOR_FLAG_WAKE_UP,
+    .reserved = {},
+};
+
+static const sensor_t sSensorProxCM36686 = {
+    .name = "CM36686 Proximity Sensor",
     .vendor = "Capella Microsystems, Inc.",
     .version = 1,
     .handle = HANDLE_PROXIMITY,
@@ -178,6 +236,12 @@ int ProximitySensor::addSensorList(sensor_t *list, int count)
 
     if (strcmp(mChipName, "CM36672P") == 0)
         src = &sSensorProxCM36672P;
+    else if (strcmp(mChipName, "GP2A") == 0)
+        src = &sSensorProxGP2A;
+    else if (strcmp(mChipName, "STK3013") == 0)
+        src = &sSensorProxSTK3013;
+    else if (strcmp(mChipName, "CM36686") == 0)
+        src = &sSensorProxCM36686;
 
     if (src) {
         list[count] = *src;
