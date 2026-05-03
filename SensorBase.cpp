@@ -32,7 +32,7 @@
 uint32_t SensorBase::flush_state = 0;
 
 SensorBase::SensorBase(const char *sensorName)
-    : mSensorName(sensorName), mDevFd(-1), mDataFd(-1), mSysfsPathLen(0)
+    : mSensorName(sensorName), mSysfsPathLen(0), mDevFd(-1), mDataFd(-1)
 {
     memset(mInputName, 0, sizeof(mInputName));
     memset(mChipName, 0, sizeof(mChipName));

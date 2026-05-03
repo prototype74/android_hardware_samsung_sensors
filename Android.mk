@@ -12,7 +12,6 @@ else
 endif
 
 LOCAL_CFLAGS += -DLOG_TAG=\"Sensors\"
-LOCAL_CFLAGS += -DSENSORS_DEVICE_API_VERSION_1_3
 
 LOCAL_SRC_FILES := \
     SensorBase.cpp \
