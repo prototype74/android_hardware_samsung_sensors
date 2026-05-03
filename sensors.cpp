@@ -29,9 +29,11 @@
 #include "SensorBase.h"
 #include "AccelerometerSensor.h"
 #include "ProximitySensor.h"
+#ifdef GRIP_SENSOR
+#include "GripSensor.h"
+#endif
 #include "MetaEvent.h"
 
-#define MAX_SENSOR_DRIVERS 3
 #define MAX_SENSOR_LIST    8
 
 static sensor_t g_sensor_list[MAX_SENSOR_LIST];
@@ -55,6 +57,9 @@ private:
     enum {
         accel = 0,
         proximity,
+#ifdef GRIP_SENSOR
+        grip,
+#endif
         meta,
         numSensors
     };
@@ -75,6 +80,10 @@ int sensors_poll_context_t::handleToDriver(int handle) const
         return accel;
     case HANDLE_PROXIMITY:
         return proximity;
+#ifdef GRIP_SENSOR
+    case HANDLE_GRIP:
+        return grip;
+#endif
     default:
         return -1;
     }
@@ -87,6 +96,9 @@ sensors_poll_context_t::sensors_poll_context_t()
     // Create sensor drivers
     mSensors[accel] = new AccelerometerSensor();
     mSensors[proximity] = new ProximitySensor();
+#ifdef GRIP_SENSOR
+    mSensors[grip] = new GripSensor();
+#endif
     mSensors[meta] = new MetaEvent();
 
     // Build sensor list from each driver
