@@ -29,6 +29,9 @@
 #include "SensorBase.h"
 #include "AccelerometerSensor.h"
 #include "ProximitySensor.h"
+#ifdef LIGHT_SENSOR
+#include "LightSensor.h"
+#endif
 #ifdef GRIP_SENSOR
 #include "GripSensor.h"
 #endif
@@ -57,6 +60,9 @@ private:
     enum {
         accel = 0,
         proximity,
+#ifdef LIGHT_SENSOR
+        light,
+#endif
 #ifdef GRIP_SENSOR
         grip,
 #endif
@@ -80,6 +86,10 @@ int sensors_poll_context_t::handleToDriver(int handle) const
         return accel;
     case HANDLE_PROXIMITY:
         return proximity;
+#ifdef LIGHT_SENSOR
+    case HANDLE_LIGHT:
+        return light;
+#endif
 #ifdef GRIP_SENSOR
     case HANDLE_GRIP:
         return grip;
@@ -96,6 +106,9 @@ sensors_poll_context_t::sensors_poll_context_t()
     // Create sensor drivers
     mSensors[accel] = new AccelerometerSensor();
     mSensors[proximity] = new ProximitySensor();
+#ifdef LIGHT_SENSOR
+    mSensors[light] = new LightSensor();
+#endif
 #ifdef GRIP_SENSOR
     mSensors[grip] = new GripSensor();
 #endif

@@ -23,24 +23,25 @@ All findings were cross-referenced with the kernel driver source (J510FNXXS3BTI6
 |--------|------|-------------|------------|
 | Accelerometer | K2HH (STM) | `accelerometer_sensor` | EV_REL (X/Y/Z) |
 | Proximity | CM36672P, GP2A, STK3013, CM36686 | `proximity_sensor` | EV_ABS (ABS_DISTANCE) |
+| Light | CM36686 (Capella) | `light_sensor` | EV_REL (REL_DIAL) |
 | Grip | SX9310 (SEMTECH) | `grip_sensor` | EV_REL (REL_MISC) |
 
 ## Architecture
 
 ```
-┌────────────────────────────────────────────────────────────────┐
-│ sensors.cpp (HAL entry, poll loop, API 1.3)                    │
-├────────────────────────────────────────────────────────────────┤
-│ AccelerometerSensor │ ProximitySensor │ GripSensor │ MetaEvent │
-├────────────────────────────────────────────────────────────────┤
-│ SensorBase (input device discovery, sysfs I/O)                 │
-├────────────────────────────────────────────────────────────────┤
-│ InputEventReader (ring buffer for input_event)                 │
-└────────────────────────────────────────────────────────────────┘
-         │                          │
-         ▼                          ▼
-/sys/class/sensor_event/symlink/   /dev/input/eventX
-/sys/class/sensors/*/name          /sys/class/sensors/sensor_dev/flush
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                 sensors.cpp (HAL entry, poll loop, API 1.3)                  │
+├──────────────────────────────────────────────────────────────────────────────┤
+│ AccelerometerSensor │ ProximitySensor │ LightSensor │ GripSensor │ MetaEvent │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                SensorBase (input device discovery, sysfs I/O)                │
+├──────────────────────────────────────────────────────────────────────────────┤
+│                InputEventReader (ring buffer for input_event)                │
+└──────────────────────────────────────────────────────────────────────────────┘
+                  │                          │
+                  ▼                          ▼
+         /sys/class/sensor_event/symlink/   /dev/input/eventX
+         /sys/class/sensors/*/name          /sys/class/sensors/sensor_dev/flush
 ```
 
 ## Setup

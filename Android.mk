@@ -17,6 +17,11 @@ LOCAL_SRC_FILES := \
     MetaEvent.cpp \
     sensors.cpp
 
+ifeq ($(TARGET_USES_LIGHT_SENSOR),true)
+LOCAL_CFLAGS += -DLIGHT_SENSOR
+LOCAL_SRC_FILES += LightSensor.cpp
+endif
+
 ifeq ($(TARGET_USES_GRIP_SENSOR),true)
 LOCAL_CFLAGS += -DGRIP_SENSOR
 LOCAL_SRC_FILES += GripSensor.cpp
