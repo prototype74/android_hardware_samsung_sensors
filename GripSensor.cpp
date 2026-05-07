@@ -22,6 +22,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
+#include <linux/input.h>
 #include <utils/Log.h>
 
 #include "GripSensor.h"
@@ -29,10 +30,10 @@
 // Grip sensor scale: (value - 1) * 5.0
 #define GRIP_SCALE 5.0f
 
-// ioctl to read initial grip state (from stock blob)
-#define GRIP_IOCTL_GET_INIT 0x80184549
+// Read initial grip state via standard input ABS ioctl
+#define GRIP_IOCTL_GET_INIT EVIOCGABS(ABS_GAS)
 
-// Sensor type for grip (Samsung custom type)
+// Samsung vendor-defined sensor type for grip
 #define SENSOR_TYPE_GRIP 0x10018
 
 GripSensor::GripSensor()
