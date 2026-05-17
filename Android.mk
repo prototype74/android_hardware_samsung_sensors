@@ -17,17 +17,18 @@ LOCAL_SRC_FILES := \
     MetaEvent.cpp \
     sensors.cpp
 
+LOCAL_SHARED_LIBRARIES := liblog libcutils libutils
+
 ifeq ($(TARGET_USES_LIGHT_SENSOR),true)
 LOCAL_CFLAGS += -DLIGHT_SENSOR
 LOCAL_SRC_FILES += LightSensor.cpp
+LOCAL_SHARED_LIBRARIES += libm
 endif
 
 ifeq ($(TARGET_USES_GRIP_SENSOR),true)
 LOCAL_CFLAGS += -DGRIP_SENSOR
 LOCAL_SRC_FILES += GripSensor.cpp
 endif
-
-LOCAL_SHARED_LIBRARIES := liblog libcutils libutils
 
 LOCAL_C_INCLUDES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr

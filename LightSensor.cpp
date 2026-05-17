@@ -19,6 +19,7 @@
  */
 
 #include <fcntl.h>
+#include <math.h>
 #include <string.h>
 #include <unistd.h>
 #include <utils/Log.h>
@@ -30,6 +31,7 @@ LightSensor::LightSensor()
       mInputReader(16),
       mHasPendingEvent(false),
       mEnabled(0),
+      mWhiteData(0),
       mTimestamp(0),
       mTimestampHi(0)
 {
@@ -130,7 +132,8 @@ int LightSensor::readEvents(sensors_event_t *data, int count)
             case REL_DIAL:  // als_data + 1
                 mPendingEvent.light = (float)(event->value - 1);
                 break;
-            case REL_WHEEL:  // white_data + 1 (unused but consume)
+            case REL_WHEEL:  // white_data + 1
+                mWhiteData = event->value - 1;
                 break;
             case REL_X:  // timestamp HIGH 32 bits
                 mTimestampHi = (int64_t)event->value << 32;
@@ -144,6 +147,8 @@ int LightSensor::readEvents(sensors_event_t *data, int count)
             }
         } else if (type == EV_SYN) {
             if (mEnabled) {
+                if (strcmp(mChipName, "CM36686") == 0)
+                    mPendingEvent.light = correctLuxCM36686((int)mPendingEvent.light, mWhiteData);
                 int64_t ts = mTimestampHi | mTimestamp;
                 if (ts == 0)
                     ts = getTimestamp();
@@ -160,6 +165,31 @@ int LightSensor::readEvents(sensors_event_t *data, int count)
     }
 
     return numEvents;
+}
+
+// Compute calibrated lux from CM36686 raw ALS and white channel counts.
+// Calibration coefficients are optimized for j5xnlte and may not apply to other devices.
+float LightSensor::correctLuxCM36686(int als_data, int white_data)
+{
+    if (als_data < 3)
+        return 0.0f;
+
+    float ratio = (float)white_data / (float)als_data;
+    double lux;
+
+    /*
+     * >= 0.45: incandescent/warm light (more IR content in white channel)
+     * <  0.45: fluorescent/daylight (less IR, white channel relatively lower)
+     */
+    if (ratio >= 0.45f)
+        lux = pow((double)white_data, 0.9956) * 0.17683;
+    else
+        lux = pow((double)white_data, 1.0634) * 0.09516;
+
+    if (lux >= 11000.0) // map very bright conditions to fixed sunlight lux
+        lux = 40000.0;
+
+    return (float)lux;
 }
 
 static const sensor_t sSensorLightCM36686 = {

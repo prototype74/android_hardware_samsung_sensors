@@ -31,8 +31,11 @@ class LightSensor : public SensorBase {
     sensors_event_t mPendingEvent;
     bool mHasPendingEvent;
     int mEnabled;
+    int mWhiteData;
     int64_t mTimestamp;
     int64_t mTimestampHi;
+
+    float correctLuxCM36686(int als_data, int white_data);
 
 public:
     LightSensor();
