@@ -92,7 +92,7 @@ int ProximitySensor::enable(int handle, int en)
 
 int ProximitySensor::setDelay(int handle, int64_t ns)
 {
-    // CM36672P is interrupt-driven, no poll_delay needed
+    // Current supported proximity sensors are interrupt-driven, no poll_delay needed
     ALOGI("ProximitySensor(%d) setDelay : %lld(ns) - ignored (IRQ-driven)", handle, (long long)ns);
     return 0;
 }
@@ -173,8 +173,8 @@ static const sensor_t sSensorProxCM36672P = {
     .reserved = {},
 };
 
-static const sensor_t sSensorProxGP2A = {
-    .name = "GP2A Proximity Sensor",
+static const sensor_t sSensorProxGP2A002 = {
+    .name = "GP2A002 Proximity Sensor",
     .vendor = "Sharp",
     .version = 1,
     .handle = HANDLE_PROXIMITY,
@@ -236,8 +236,8 @@ int ProximitySensor::addSensorList(sensor_t *list, int count)
 
     if (strcmp(mChipName, "CM36672P") == 0)
         src = &sSensorProxCM36672P;
-    else if (strcmp(mChipName, "GP2A") == 0)
-        src = &sSensorProxGP2A;
+    else if (strcmp(mChipName, "GP2A002") == 0)
+        src = &sSensorProxGP2A002;
     else if (strcmp(mChipName, "STK3013") == 0)
         src = &sSensorProxSTK3013;
     else if (strcmp(mChipName, "CM36686") == 0)
